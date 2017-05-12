@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="vue.min.js"></script>
+</head>
+<style>
+    html,body,p{
+        margin:0;padding: 0;
+    }
+    ul,li{
+        list-style: none;
+        margin:0;padding: 0;
+        font-size: 14px;
+    }
+    .box{
+        width:500px;
+        border:1px solid #eee;
+        margin:20px auto;
+        box-sizing: border-box;
+    }
+    .box input{
+        width:99%;
+    }
+    .con{
+        position: relative;
+        padding-left:20px;
+        border:1px solid #ccc;
+        box-sizing: border-box;
+    }
+    .dian{
+        display: block;
+        width:10px;
+        height:10px;
+        border-radius: 50%;
+        border:1px solid green;
+        position: absolute;
+        top:0;bottom: 0;margin:auto;
+        left:6px;
+        cursor: pointer;
+    }
+    .del{
+        cursor: pointer;
+        position: absolute;
+        right:20px;
+    }
+    .del:hover{
+        color:red;
+    }
+    .opts{
+        float: left;
+        width:100px;
+        border:1px solid #eee;
+        text-align: center;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .opts:hover{
+        background: #0aff86;
+        color:#fff;
+    }
+    .active{
+        background:#0aff86;
+        color:#fff;
+    }
+</style>
+<body>
+    <div class="box">
+        <div class="opts" @click="chakan('all')" :class="{active:state=='all'}">全部</div>
+        <div class="opts" @click="chakan('done')" :class="{active:state=='done'}">已完成</div>
+        <div class="opts" @click="chakan('undo')" :class="{active:state=='undo'}">未完成</div>
+        <input type="text" v-model="text" @keydown.13="add"></p>
+        <ul v-if="state=='all'">
+            <li class="con" v-for="item in arr">
+                <span class="dian" @click="gaibian(item.id,item.state)" :class="{active:item.state==2}"></span>
+                <span>{{item.con}}</span>
+                <span class="del" @click="del(item.id,item.state)">删除</span>
+            </li>
+        </ul>
+        <ul v-if="state=='done'">
+            <li class="con" v-for="item in done">
+                <span class="dian" @click="gaibian(item.id,item.state)" :class="{active:item.state==2}"></span>
+                <span>{{item.con}}</span>
+                <span class="del" @click="del(item.id,item.state)">删除</span>
+            </li>
+        </ul>
+        <ul v-if="state=='undo'">
+            <li class="con" v-for="item in undo">
+                <span class="dian" @click="gaibian(item.id,item.state)" :class="{active:item.state==2}"></span>
+                <span>{{item.con}}</span>
+                <span class="del" @click="del(item.id,item.state)">删除</span>
+            </li>
+        </ul>
+    </div>
+</body>
+<script>
+    new Vue({
+        el:".box",
+        data:{
+            text:"",
+            arr:[],
+            done:[],
+            undo:[],
+            state:"all"
+        },
+        methods:{
+           add(){
+               var obj={
+                   id:new Date().getTime(),
+                   con:this.text,
+                   state:1
+               }
+               this.text="";
+               this.arr.push(obj);
+               this.undo.push(obj);
+           },
+            del(id,state){
+               if(state==1){
+                   this.arr=this.arr.filter(function(a){
+                       return a.id!=id;
+                   })
+                   this.undo=this.undo.filter(function(a){
+                       return a.id!=id;
+                   })
+               }else{
+                   this.arr=this.arr.filter(function(a){
+                       return a.id!=id;
+                   })
+                   this.done=this.done.filter(function(a){
+                       return a.id!=id;
+                   })
+               }
+            },
+            chakan(zt){
+                this.state=zt;
+            },
+            gaibian(id,state){
+                if(state==1){
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id
+                    });
+                    obj[0].state=2;
+                    this.done.push(obj[0]);
+                    this.undo=this.undo.filter(function(a){
+                        return a.id!=id;
+                    })
+                }else if(state==2){
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id
+                    });
+                    obj[0].state=1;
+                    this.undo.push(obj[0]);
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    })
+                }
+            }
+        }
+    })
+</script>
+</html>
