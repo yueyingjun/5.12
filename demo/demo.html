@@ -8,44 +8,45 @@
 </head>
 <body>
 
-    <div id="box" >
-        <div class="nav">
-            <ul>
-                <li :class="{now:classState=='all'}" @click="classchange('all')">全部</li>
-                <li :class="{now:classState=='done'}" @click="classchange('done')">已完成</li>
-                <li :class="{now:classState=='todo'}" @click="classchange('todo')">未完成</li>
-            </ul>
-            <div class="add">添加事项：
-                <input type="text" v-model="addInfo" @keydown.13="addFun">
-            </div>
-        </div>
-        <div class="content">
-            <ul v-show="classState=='all'" >
-                <li v-for="item in all">
-                    <span class="state" v-if="item.state=='done'" @click="changeState(item.id,item.state)">★</span>
-                    <span class="state" v-if="item.state=='todo'" @click="changeState(item.id,item.state)">☆</span>
-                    <p>{{item.info}}</p>
-                    <span class="del" @click="del(item.id,item.state)">×</span>
-                </li>
-            </ul>
-            <ul v-show="classState=='done'">
-                <li v-for="item in done">
-                    <span class="state" v-if="item.state=='done'" @click="changeState(item.id,item.state)">★</span>
-                    <span class="state" v-if="item.state=='todo'" @click="changeState(item.id,item.state)">☆</span>
-                    <p>{{item.info}}</p>
-                    <span class="del" @click="del(item.id,item.state)">×</span>
-                </li>
-            </ul>
-            <ul v-show="classState=='todo'">
-                <li v-for="item in todo">
-                    <span class="state" v-if="item.state=='done'" @click="changeState(item.id,item.state)">★</span>
-                    <span class="state" v-if="item.state=='todo'" @click="changeState(item.id,item.state)">☆</span>
-                    <p>{{item.info}}</p>
-                    <span class="del" @click="del(item.id,item.state)">×</span>
-                </li>
-            </ul>
+<div id="box" >
+    <div class="nav">
+        <ul>
+            <li :class="{now:classState=='all'}" @click="classchange('all')">全部</li>
+            <li :class="{now:classState=='done'}" @click="classchange('done')">已完成</li>
+            <li :class="{now:classState=='todo'}" @click="classchange('todo')">未完成</li>
+        </ul>
+        <div class="add">添加事项：
+            <input type="text" v-model="addInfo" @keydown.13="addFun">
         </div>
     </div>
+    <div class="content">
+        <ul v-show="classState=='all'" >
+            <li v-for="item in all">
+                <span class="state" v-if="item.state=='done'" @click="changeState(item.id,item.state)">★</span>
+                <span class="state" v-if="item.state=='todo'" @click="changeState(item.id,item.state)">☆</span>
+                <p>{{item.info}}</p>
+                <span class="del" @click="del(item.id,item.state)">×</span>
+            </li>
+        </ul>
+        <ul v-show="classState=='done'">
+            <li v-for="item in done">
+                <span class="state" v-if="item.state=='done'" @click="changeState(item.id,item.state)">★</span>
+                <span class="state" v-if="item.state=='todo'" @click="changeState(item.id,item.state)">☆</span>
+                <p>{{item.info}}</p>
+                <span class="del" @click="del(item.id,item.state)">×</span>
+            </li>
+        </ul>
+        <ul v-show="classState=='todo'">
+            <li v-for="item in todo">
+                <span class="state" v-if="item.state=='done'" @click="changeState(item.id,item.state)">★</span>
+                <span class="state" v-if="item.state=='todo'" @click="changeState(item.id,item.state)">☆</span>
+                <p>{{item.info}}</p>
+                <span class="del" @click="del(item.id,item.state)">×</span>
+            </li>
+        </ul>
+    </div>
+    <div style="display:none">{{temp}}</div>
+</div>
 
 </body>
 <script>
@@ -58,11 +59,12 @@
 
             addInfo:"", // 将要添加的信息
 
-            todo:[], // 未完成
-            done:[], // 已完成
-            all:[], // 全部事项
+            todo:localStorage.todo?JSON.parse(localStorage.todo):[], // 未完成
+            done:localStorage.done?JSON.parse(localStorage.done):[], // 已完成
+            all:localStorage.all?JSON.parse(localStorage.all):[], // 全部事项
 
             id:0, // 事件ID
+
         },
         methods:{
             classchange(type){
@@ -122,6 +124,14 @@
                 }
             }
 
+        },
+        computed:{
+            temp(){
+                localStorage.all=JSON.stringify(this.all);
+                localStorage.done=JSON.stringify(this.done);
+                localStorage.todo=JSON.stringify(this.todo);
+                return 0;
+            }
         }
     })
 </script>
