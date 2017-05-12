@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="demo.css">
+    <script src="vue.min.js"></script>
+</head>
+<body>
+
+<div id="box" >
+    <div class="nav">
+        <ul>
+            <li :class="{now:classState=='all'}" @click="classchange('all')">全部</li>
+            <li :class="{now:classState=='done'}" @click="classchange('done')">已完成</li>
+            <li :class="{now:classState=='todo'}" @click="classchange('todo')">未完成</li>
+        </ul>
+        <div class="add">添加事项：
+            <input type="text" v-model="addInfo" @keydown.13="addFun">
+        </div>
+    </div>
+    <div class="content">
+        <ul v-show="classState=='all'" >
+            <li v-for="item in all">
+                <span class="state" v-if="item.state=='done'" @click="changeState(item.id,item.state)">★</span>
+                <span class="state" v-if="item.state=='todo'" @click="changeState(item.id,item.state)">☆</span>
+                <p>{{item.info}}</p>
+                <span class="del" @click="del(item.id,item.state)">×</span>
+            </li>
+        </ul>
+        <ul v-show="classState=='done'">
+            <li v-for="item in done">
+                <span class="state" v-if="item.state=='done'" @click="changeState(item.id,item.state)">★</span>
+                <span class="state" v-if="item.state=='todo'" @click="changeState(item.id,item.state)">☆</span>
+                <p>{{item.info}}</p>
+                <span class="del" @click="del(item.id,item.state)">×</span>
+            </li>
+        </ul>
+        <ul v-show="classState=='todo'">
+            <li v-for="item in todo">
+                <span class="state" v-if="item.state=='done'" @click="changeState(item.id,item.state)">★</span>
+                <span class="state" v-if="item.state=='todo'" @click="changeState(item.id,item.state)">☆</span>
+                <p>{{item.info}}</p>
+                <span class="del" @click="del(item.id,item.state)">×</span>
+            </li>
+        </ul>
+    </div>
+    <div style="display:none">{{temp}}</div>
+</div>
+
+</body>
+<script>
+    new Vue({
+        el:"#box",
+        data:{
+
+            // 改变导航按钮类名
+            classState:'all', // all todo done
+
+            addInfo:"", // 将要添加的信息
+
+            todo:localStorage.todo?JSON.parse(localStorage.todo):[], // 未完成
+            done:localStorage.done?JSON.parse(localStorage.done):[], // 已完成
+            all:localStorage.all?JSON.parse(localStorage.all):[], // 全部事项
+
+            id:0, // 事件ID
+
+        },
+        methods:{
+            classchange(type){
+                this.classState=type;
+            },
+
+            // 添加信息
+            addFun(){
+                let info={
+                    id:++this.id,
+                    info:this.addInfo,
+                    state:'todo'  // todo or done
+                }
+                this.todo.push(info);
+                this.all.push(info);
+                this.addInfo="";
+            },
+
+            // 改变状态
+            changeState(id,state){
+                if(state=='todo'){
+                    let that=this;
+                    this.todo.forEach(function(obj,index){
+                        if(obj.id==id){
+                            obj.state='done';
+                            that.done.push(that.todo.splice(index,1)[0]);
+                            return;
+                        }
+                    })
+                    this.all.forEach(function(obj,index){
+                        if(obj.id==id){
+                            that.all[index].state='done';
+                            return;
+                        }
+                    })
+                }
+            },
+
+            // 删除事项
+            del(id,state){
+                if(state=='todo'){
+                    this.todo=this.todo.filter(function(a){
+                        return a.id!=id;
+                    })
+                    this.all=this.all.filter(function(a){
+                        return a.id!=id;
+                    })
+
+                }else if(state=='done'){
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    })
+                    this.all=this.all.filter(function(a){
+                        return a.id!=id;
+                    })
+
+                }
+            }
+
+        },
+        computed:{
+            temp(){
+                localStorage.all=JSON.stringify(this.all);
+                localStorage.done=JSON.stringify(this.done);
+                localStorage.todo=JSON.stringify(this.todo);
+                return 0;
+            }
+        }
+    })
+</script>
+</html>
