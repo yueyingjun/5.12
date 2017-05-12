@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+<body>
+    <div class="one" v-on:click="add1" >
+        {{num1}}
+
+        <ul @click="add3" style="width: 200px;height: 100px;background:blue">{{num2}}</ul>
+
+
+        <ul @click="add2" style="width: 200px;height: 100px;background: red">{{add2}}</ul>
+    </div>
+</body>
+<script src="vue.js"></script>
+<script>
+    new Vue({
+        el:".one",
+        data:{
+            num1:0,
+            num2:2
+        },
+        methods:{
+            add1(){
+                ++this.num1
+            },
+            add3:function () {
+                ++this.num2
+            }
+        },
+        computed:{
+
+           add2:function () {
+                return parseInt(this.num1)+parseInt(this.num2)
+            }
+        }
+    })
+</script>
+</html>

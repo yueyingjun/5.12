@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="vue.js"></script>
+<style>
+    .container{
+        width: 600px;
+        /*height: 400px;*/
+        background: skyblue;
+        position: absolute;
+        left: 0;right: 0;top: 40px;
+        margin: auto;
+    }
+    .box{
+        width: 100%;
+        /*height:50px;*/
+        border: 1px solid #ccc;
+        background: #fff;
+    }
+    .box input{
+        width: 100%;
+        height: 100%;
+        font-size: 40px;
+        outline: none;
+        border: none;
+        border-bottom: 1px solid #ccc;
+    }
+    .box input:focus{
+        outline: none;
+    }
+    .opt button{
+        width: 60px;
+        height: 30px;
+    }
+    li{
+        overflow: hidden;
+    }
+    li span{
+        float: left;
+        margin:0 20px;
+    }
+    li span:first-child{
+        width:10px;height: 10px;
+        border:1px solid  #000;
+        border-radius: 50%;
+    }
+
+    ul li{
+        list-style: none;
+    }
+
+    .red{
+        background:red;
+    }
+</style>
+<body>
+    <div class="container">
+        <div class="box">
+            <input type="text" v-model="text" @keydown.13="add">
+            <br>
+            <ul v-if="state==='all'">
+                <li v-for="item in arr" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                    <span> {{item.con}}</span>
+                    <span @click="del(item.id,item.state)">删除</span>
+                </li>
+
+            </ul>
+
+            <ul v-else-if="state==='done'">
+                <li v-for="item in done" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                    <span> {{item.con}}</span>
+                    <span @click="del(item.id,item.state)">删除</span>
+                </li>
+
+            </ul>
+
+
+            <ul v-else-if="state==='undo'">
+                <li v-for="item in undo" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                    <span> {{item.con}}</span>
+                    <span @click="del(item.id,item.state)">删除</span>
+                </li>
+
+            </ul>
+        </div>
+        <div class="opt">
+            <button @click="changeState('all')">全部</button>
+            <button @click="changeState('undo')">未读</button>
+            <button @click="changeState('done')">已读</button>
+        </div>
+    </div>
+</body>
+<script>
+    new Vue({
+        el:".container",
+        data:{
+            text:"",
+            arr:[],
+            done:[],
+            undo:[],
+            state:"all"
+        },
+        methods:{
+            //因为在这里不能只是简单的保存为普通的数据  应该以对象的方式来保存  因为这些数据要有一个属性来保存它是那一条  所以要有id
+            add(){
+                var obj={
+                    id:Math.random()+new Date().getTime(),
+                    con:this.text,
+                    state:1
+                    //1 undo  2  done
+                };
+                this.text="";
+                this.arr.push(obj);
+                this.undo.push(obj);
+            },
+            del(id,state){
+                //当在未读时
+                if(state==1){
+//                    利用数组的过滤    a  b c
+                    this.arr=this.arr.filter(function(a){
+                        return a.id!=id;
+                    });
+                    this.undo=this.undo.filter(function(a){
+                        return a.id!=id;
+                    });
+                }else{
+                    //当在已读时
+                    this.arr=this.arr.filter(function(a){
+                        return a.id!=id;
+                    });
+
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    });
+                }
+            },
+            change(id,state){
+                if(state==1){
+                    //数组中的第一个对象
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id
+                    })[0];
+                    //变成已读状态
+                    obj.state=2;
+                    //放到已读数组中
+                    this.done.push(obj);
+
+                    //将未读中的删除
+                    this.undo=this.undo.filter(function(a){
+
+                        return a.id!=id;
+                    })
+
+                }else if(state==2){
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id
+                    })[0];
+
+                    obj.state=1;
+
+                    this.done=this.done.filter(function(a){
+
+                        return a.id!=id;
+                    })
+
+                    this.undo.push(obj);
+
+                }
+            },
+            changeState(str){
+                this.state=str;
+            }
+        }
+    })
+</script>
+</html>
