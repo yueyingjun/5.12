@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" href="bootstrap.css">
+<script src="vue.js"></script>
+<style>
+    .form-group{
+        width: 400px;
+        margin: auto;
+    }
+    .list-inline{
+        margin-top: 10px;
+    }
+    .list-inline li{
+        line-height: 34px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .list-inline li div{
+        width: 20px;
+        height: 20px;
+        border-radius:100%;
+        border: 1px solid #eeeeee;
+        float: left;
+        margin-top: 7px;
+    }
+    .text{
+        margin-left: 10px;
+        padding-left: 10px;
+    }
+    .list-inline li button{
+        float: right;
+    }
+    .color{
+        background-color: orangered;
+    }
+</style>
+<body>
+<div class="form-group">
+    <label for="exampleInputEmail1">输入事项</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="待办事项" v-model="text" @keydown.13="push">
+    <ul class="list-inline" v-if="state=='all'">
+        <li v-for="item in all">
+            <div  @click="change(item.id,item.state)" v-bind:class="{color:item.state===2}"></div>
+            <span class="text">{{item.con}}</span>
+            <button type="button"  class="btn btn-danger" @click="del(item.id,item.state)">删除</button>
+        </li>
+    </ul>
+    <ul class="list-inline" v-else-if="state=='done'">
+        <li v-for="item in done">
+            <div  @click="change(item.id,item.state)" v-bind:class="{color:item.state===2}"></div>
+            <span class="text">{{item.con}}</span>
+            <button type="button"  class="btn btn-danger" @click="del(item.id,item.state)">删除</button>
+        </li>
+    </ul>
+    <ul class="list-inline" v-else-if="state=='notDo'">
+        <li v-for="item in notDo">
+            <div  @click="change(item.id,item.state)" v-bind:class="{color:item.state===2}"></div>
+            <span class="text">{{item.con}}</span>
+            <button type="button"  class="btn btn-danger" @click="del(item.id,item.state)">删除</button>
+        </li>
+    </ul>
+    <button type="button" class="btn btn-primary" @click="changeState('all')">全部事项</button>
+    <button type="button" class="btn btn-info" @click="changeState('notDo')">未完成</button>
+    <button type="button" class="btn btn-success" @click="changeState('done')">已完成</button>
+</div>
+</body>
+<script>
+    new Vue({
+        el:".form-group",
+        data:{
+            text:"",
+            done:localStorage.done?JSON.parse(localStorage.done):[],
+            notDo:localStorage.notDo?JSON.parse(localStorage.notDo):[],
+            all:localStorage.all?JSON.parse(localStorage.all):[],
+            state:"all",//这是现实模块的状态值
+        },
+        methods:{
+            /*添加事项*/
+            push(){
+
+                var obj={
+                    id:Math.random()+new Date().getTime(),
+                    con:this.text,
+                    state:1
+                }
+                this.text="";
+                this.notDo.push(obj);
+                this.all.push(obj);
+                localStorage.all= JSON.stringify(this.all);
+                localStorage.notDo= JSON.stringify(this.notDo);
+            },
+            /*改变事项的状态*/
+            change(id,state){
+
+                if(state===1){
+                    var obj=this.all.filter(function (obj) {
+                        return obj.id==id;
+                    })[0];
+                    obj.state=2;
+                    this.done.push(obj);
+
+                    localStorage.done= JSON.stringify(this.done);
+
+                    this.notDo=this.notDo.filter(function (obj) {
+                        return obj.id!=id;
+                    })
+                    localStorage.notDo= JSON.stringify(this.notDo);
+
+                    this.all.forEach(function (obj,index) {
+                        if(obj.id===id){
+                            obj.state=2;
+                        }
+                    })
+                    localStorage.all= JSON.stringify(this.all);
+                }else {
+                    var obj=this.all.filter(function (obj) {
+                        return obj.id==id;
+                    })[0];
+                    obj.state=1;
+                    this.notDo.push(obj);
+                    localStorage.notDo= JSON.stringify(this.notDo);
+                    this.done=this.done.filter(function (obj) {
+                        return obj.id!=id;
+                    })
+                    localStorage.done= JSON.stringify(this.done);
+                    this.all.forEach(function (obj,index) {
+                        if(obj.id===id){
+                            obj.state=1;
+                        }
+                    })
+                    localStorage.all= JSON.stringify(this.all);
+                }
+            },
+            /*删除事项*/
+            del(id,state){
+                if(state===1){
+
+                    this.all=this.all.filter(function (obj) {
+                        return obj.id!=id;
+                    })
+                    this.notDo=this.notDo.filter(function (obj) {
+                        return obj.id!=id;
+                    })
+                    localStorage.all= JSON.stringify(this.all);
+                    localStorage.notDo= JSON.stringify(this.notDo);
+
+                }else {
+                    this.all=this.all.filter(function (obj) {
+                        return obj.id!=id;
+                    })
+
+                    this.done=this.done.filter(function (obj) {
+                        return obj.id!=id;
+                    })
+                    localStorage.all= JSON.stringify(this.all);
+                    localStorage.done= JSON.stringify(this.done);
+                }
+            },
+            /*改变模块现实的状态值*/
+            changeState(par){
+                this.state=par;
+            }
+
+
+        }
+    })
+</script>
+</html>
