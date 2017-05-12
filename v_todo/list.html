@@ -31,6 +31,7 @@
     </div>
     <div class="liebiao">
         <ul v-if="state=='all'">
+
             <li v-for="item in all">
                 <span class="dian" :class="{wan:item.state==2}" @click="bian(item.id,item.state)"></span>
                 {{item.con}}

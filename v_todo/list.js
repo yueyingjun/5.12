@@ -17,6 +17,7 @@ window.onload=function () {
                 };
                 this.all.push(obj);
                 localStorage.list=JSON.stringify(this.all);
+                this.addnew="";
             },
             getid(){
                 let id=0;
