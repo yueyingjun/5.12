@@ -79,6 +79,17 @@
         line-height: 50px;
         color:#fff;
     }
+    .del{
+        width:100px;height:100%;
+        cursor: pointer;
+        float:right;
+        border-radius:10px;
+        display: inline-block;
+        background: red;
+        text-align: center;
+        line-height:40px;
+        color:#fff;
+    }
 </style>
 <body>
     <div class="container">
@@ -89,7 +100,7 @@
                 <li v-for="item in arr">
                     <span @click="change(item.id,item.state)" :class="{red:item.state===2}"></span>
                     <span>{{item.con}}</span>
-                    <span @click="del(item.id,item.state)">删除</span>
+                    <span @click="del(item.id,item.state)" class="del">删除</span>
                 </li>
             </ul>
 
