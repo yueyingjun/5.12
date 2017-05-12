@@ -1,0 +1,95 @@
+html,body,ul,li{
+    padding: 0;
+    margin:0;
+    list-style: none;
+}
+button, input {
+    -webkit-tap-highlight-color: transparent;
+}
+.container{
+    width:100vw;
+    height:100vh;
+}
+.topCon{
+    background: #00B0F0;
+    width:100%;
+    height:44px;
+    text-align:center;
+    line-height:44px;
+    font-size:24px;
+    color:#fff;
+    padding: 20px 0;
+}
+.box{
+    width:90%;
+    margin:auto;
+    padding-top: 30px;
+}
+.shuru{
+    width:97%;
+    padding: 15px 10px;
+    border:1px solid #C0CCDA;
+    border-radius:5px;
+    outline: none;
+}
+.opts{
+    margin:30px 0;
+}
+.opts li{
+    width:100%;
+    background: #00B0F0;
+    padding: 10px 0 0;
+    color:#fff;
+    position: relative;
+    line-height: 28px;
+}
+.opts li .optslist{
+    margin-left: 15px;
+}
+.opts li span.jiantou {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    width: 10px;
+    height: 10px;
+    content: "";
+    border-top: 2px solid #fff;
+    border-right: 2px solid #fff;
+    transform: rotate(135deg);
+    transition: transform .3s;
+}
+.opts li .conul li{
+    width:100%;
+    height:28px;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    color:#333;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+.opts li .conul li input[type=checkbox] {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    width: 18px;
+    height: 18px;
+}
+.opts li .conul li .textwz{
+    margin-left:45px;
+    float: left;
+    line-height: 28px;
+}
+.opts li .conul li .delBtn{
+    float: right;
+    margin-right:15px;
+    border:1px solid #C0CCDA;
+    font-size: 12px;
+    color:#666;
+    width:50px;
+    height:26px;
+    text-align: center;
+    line-height: 24px;
+    border-radius:5px;
+    cursor:pointer;
+}
