@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/vue.min.js"></script>
+</head>
+<style>
+</style>
+<body>
+<!--<div class="aa" v-on:click="add1">-->
+    <!--<ul style="background:red;height:30px">{{num1}}</ul>-->
+    <!--<ul style="background:blue;height:30px" v-on:click="meth">计算</ul>-->
+    <!--<ul style="background:yellow;height:30px">{{add2}}</ul>-->
+<!--</div>-->
+
+    <div class="vue">
+
+        <!--v-text-->
+        <!--<span v-text="name"></span>-->
+
+        <!--v-html-->
+        <!--<span v-html="name"></span>-->
+
+
+        <input type="text"  v-model="name" @keydown.13="push">
+
+            <li v-for="item in arr">{{item}}</li>
+
+        <input type="button" value="点击">
+    </div>
+
+</body>
+<script>
+    new Vue({
+        el:".vue",
+        data:{
+            name:"",
+//            name:"<h1>my name is zhangruili</h1>",
+            arr:[]
+        },
+        methods:{
+            push(){
+                this.arr.push(this.name);
+            }
+        }
+    })
+
+//    new Vue({
+//        el:".aa",
+//        data:{
+//            num1:1,
+//            num2:2
+//        },
+//        methods:{
+//            add1(){
+//                alert(1);
+//                ++this.num1;
+//            },
+//            meth(){
+//                ++this.num2;
+//            }
+//        },
+//        computed:{
+//            add2(){
+//                alert(2);
+//                return ++this.num2;
+//            }
+//        }
+//    })
+//    将add2 写在computed中是为了防止点击aa的时候，会执行add2
+//    点击math   num2会变化 add2中的num2变化  所以触发add2   因为事件流所以add1也会变化
+</script>
+</html>
