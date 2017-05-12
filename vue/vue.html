@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.js"></script>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+            list-style: none;
+        }
+        input{
+        	width: 75%;
+        	height: 50px;
+        	font-size: 30px;
+        	line-height: 50px;
+        	padding-left: 5%;
+        	margin-left:10%;
+        	margin-top:20px; 
+        }
+        #myapp{
+            width: 60%;
+            background: #ccc;
+            border: 1px solid #000000;
+            border-radius: 10px;
+            margin:40px auto;
+        }
+        .middle{
+            width: 100%;
+        }
+        ul li{
+            width: 100%;
+            height: 30px;
+            line-height: 20px;
+            text-align: center;
+            margin-left:20px;
+            font-size: 20px;
+            line-height: 30px;
+
+        }
+        ul li span:first-child{
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border:1px solid #000000;
+            line-height: 20px;
+            cursor: pointer;
+            float: left;
+            margin:10px auto;
+        }
+        ul li .con{
+            width: 70%;
+            height: 100%;
+            line-height: 20px;
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+        .shanchu{
+            width: 20%;
+            height: 20px;
+            background: red;
+            border: 1px solid #000;
+            color: #fff;
+            float:right; 
+            text-align: center;
+            line-height: 15px;
+            line-height: 20px;
+            margin-top: 10px;
+            margin-right: 40px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .yellowgreen{
+            background:yellowgreen;
+            border:1px solid #000; 
+        }
+        .buttons{
+        	margin-top: 20px;
+        	margin-left: 10px;
+        	margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="myapp">
+    <input type="text" placeholder="请输入内容" @keydown.13="add" v-model="text">
+    <ul v-if="state==='all'">
+        <li v-for="item in arr">
+            <span @click="change(item.id,item.state)" :class="{yellowgreen:item.state===2}"></span>
+            <span class="con">{{item.con}}</span>
+            <span @click="del(item.id,item.state)" class="shanchu">删除</span>
+        </li>
+    </ul>
+    <ul v-else-if="state==='done'">
+        <li v-for="item in done">
+            <span @click="change(item.id,item.state)" :class="{yellowgreen:item.state===2}"></span>
+            <span>{{item.con}}</span>
+            <span @click="del(item.id,item.state)" class="shanchu">删除</span>
+        </li>
+    </ul>
+    <ul v-else-if="state==='undo'">
+        <li v-for="item in undo">
+            <span @click="change(item.id,item.state)" :class="{yellowgreen:item.state===2}"></span>
+            <span>{{item.con}}</span>
+            <span @click="del(item.id,item.state)" class="shanchu">删除</span>
+        </li>
+    </ul>
+    <div class="buttons">
+    <button @click="changestates('all')">全部</button>
+    <button @click="changestates('done')">已完成</button>
+    <button @click="changestates('undo')">未完成</button>
+    </div>
+</div>
+</body>
+<script>
+    new Vue({
+        el:"#myapp",
+        data:{
+            text:"",
+            arr:[],
+            done:[],
+            undo:[],
+            state:"all"
+        },
+        methods:{
+            add(){
+                var obj={
+                    id:Math.random()+new Date().getTime(),
+                    con:this.text,
+                    state:1
+                };
+                this.text="";
+                this.arr.push(obj);
+                this.undo.push(obj);
+            },
+            del(id,state){
+                if(state==1){
+                    this.arr=this.arr.filter(function(a){
+                        return a.id!=id;
+                    });
+                    this.undo=this.undo.filter(function(a){
+                        return a.id!=id;
+                    });
+                }else{
+                    this.arr=this.arr.filter(function(a){
+                        return a.id!=id;
+                    });
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    })
+                }
+            },
+            change(id,state){
+                if(state==1){
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id;
+                    })[0];
+                    obj.state=2;
+                    this.done.push(obj);
+                    this.undo=this.undo.filter(function(a){
+                        return a.id!=id;
+                    })
+                    console.log(this.undo);
+                    console.log(this.done);
+                }else if(state==2){
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id;
+                    })[0];
+                    obj.state=1;
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    });
+                    this.undo.push(obj);
+                    console.log(this.undo);
+                }
+            },
+            changestates(str){
+                this.state=str;
+            }
+        }
+    })
+</script>
+</html>
