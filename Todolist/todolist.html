@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="todolist.css">
+    <link rel="stylesheet" href="font/iconfont.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/togolist.js"></script>
+</head>
+<body>
+    <section class="todolist">
+        <header class="header">
+            <h1>
+                <img src="img/02.svg" alt="" class="logos">
+            </h1>
+            <label for=""></label>
+            <input type="text" placeholder="我的计划表" v-model="text" @keydown.13="add" class="text">
+        </header>
+        <section class="main">
+            <ul v-if="state==='all'" class="lists">
+                <li v-for="item in arr" class="item">
+                    <input type="checkbox" @click="change(item.id,item.state)" :class="{selects:item.state===2}">
+                    <label>{{item.con}}</label>
+                    <span>
+                        <img src="img/error.svg" alt="" @click="del(item.id,item.state)" class="error">
+                    </span>
+                </li>
+            </ul>
+
+            <ul v-else-if="state==='done'" class="lists">
+                <li v-for="item in done" class="item">
+                    <input type="checkbox" @click="change(item.id,item.state)" :class="{selects:item.state===2}">
+                    <label>{{item.con}}</label>
+                    <span>
+                        <img src="img/error.svg" alt="" @click="del(item.id,item.state)" class="error">
+                    </span>
+                </li>
+            </ul>
+
+            <ul v-else-if="state==='undo'" class="lists">
+                <li v-for="item in undo" class="item">
+                    <input type="checkbox" @click="change(item.id,item.state)" :class="{selects:item.state===2}">
+                    <label>{{item.con}}</label>
+                    <span>
+                        <img src="img/error.svg" alt="" @click="del(item.id,item.state)" class="error">
+                    </span>
+                </li>
+            </ul>
+        </section>
+        <footer>
+            <ul class="select">
+                <li>
+                    <a href="javascript:;" @click="changeState('all')" class="first">全部</a>
+                </li>
+                <li>
+                    <a href="javascript:;" @click="changeState('done')">完成</a>
+                </li>
+                <li>
+                    <a href="javascript:;" @click="changeState('undo')">未完成</a>
+                </li>
+            </ul>
+        </footer>
+    </section>
+</body>
+<script>
+
+
+</script>
+</html>
