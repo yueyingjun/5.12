@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .todo{
+            width:200px;
+            /*height:100px;*/
+            margin:30px auto;
+            background-color: rgba(21,24,100,.2);
+        }
+        .keyin{
+            outline-style: none;
+            width: 100%;
+        }
+        .ok{
+            list-style:none;
+        }
+    </style>
+</head>
+<script src="vue.min.js"></script>
+<body>
+    <div class="todo">
+        <input type="text" class="keyin" @keydown.13="insert" v-model="text"><br>
+        <ul class="do" v-if="state=='all'">
+            <li v-for="item in undo" @click="cstate(item)" :class="{ok:item.state===2}">
+                <span>{{item.con}}</span>
+                <a href="javascript:;"@click="del(item.id,item.state)">删除</a>
+            </li>
+            <li v-for="item in done" @click="cstate(item)" :class="{ok:item.state===2}">
+                <span>{{item.con}}</span>
+                <a href="javascript:;"@click="del(item.id,item.state)">删除</a>
+            </li>
+        </ul>
+        <ul class="do" v-if="state=='undo'">
+            <li v-for="item in undo" @click="cstate(item)" :class="{ok:item.state===2}">
+                {{item.con}}
+                <div @click="del(item.id,item.state)">删除</div>
+
+            </li>
+        </ul>
+        <ul class="do" v-if="state=='done'">
+            <li v-for="item in done" @click="cstate(item)" :class="{ok:item.state===2}">
+                {{item.con}}
+                <div @click="del(item.id,item.state)">删除</div>
+            </li>
+        </ul>
+        <button @click="change('all')">all</button>
+        <button @click="change('undo')">undo</button>
+        <button @click="change('done')">done</button>
+    </div>
+</body>
+<script>
+    new Vue({
+        el:".todo",
+        data:{
+            text:"",
+            arr:[],
+            undo:[],
+            done:[],
+            state:"all"
+        },
+        methods:{
+            insert:function(){
+                var obj={};
+                obj.con=this.text;
+                obj.id=Math.random()+new Date().getDate();
+                obj.state=1;
+                this.arr.push(obj);
+                this.undo.push(obj);
+                this.text="";
+            },
+            //选项卡变化
+            change:function(str){
+                this.state=str;
+            },
+            //删除
+            del:function (id,state) {
+                if(state==1){
+                    this.undo=this.undo.filter(function(a){
+                        return a.id!=id;
+                    })
+                }else if(state==2){
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    })
+                }
+            },
+            //内容状态变化
+            cstate:function(obj){
+                if(obj.state==1){
+                    this.done.push(obj);
+                    this.undo=this.undo.filter(function(a){
+                        return a.id!=obj.id;
+                    });
+                    obj.state=2;
+                }
+
+            }
+        }
+    })
+</script>
+</html>
