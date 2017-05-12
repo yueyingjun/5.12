@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue</title>
+    <script src="jquery.js"></script>
+    <script src="vue.js"></script>
+</head>
+<style>
+    .box{
+        width: 800px;
+        min-height: 300px;
+        margin: 10px auto;
+        background: #FCF5CB;
+        position: relative;
+        padding-bottom: 30px;
+        border:1px solid yellowgreen;
+    }
+    input{
+        width: 100%;
+        border: 0;
+        outline: none;
+        height: 30px;
+        box-sizing: border-box;
+        padding-left: 10px;
+    }
+    .btn{
+        position: absolute;
+        bottom: 10px;
+        box-sizing: border-box;
+        padding-left: 30px;
+    }
+    .btn>span{
+        padding: 5px 20px;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.5s;
+        background: yellowgreen;
+    }
+    .btn>span:hover{
+        background: #333;
+        color: #fff;
+    }
+    li{
+        position: relative;
+        list-style: none;
+    }
+    li>span:first-child{
+        display: inline-block;
+        width:10px;height: 10px;
+        border-radius: 50%;
+        background: yellowgreen;
+    }
+    li>span:last-child{
+        position: absolute;
+        right: 50px;
+        cursor: pointer;
+    }
+    li>span.red{
+        background:red;
+    }
+</style>
+<body>
+<div class="box">
+    <input type="text" v-model="text" @keydown.13="add">
+    <ul v-if="state=='all'">
+        <li v-for="i in all">
+            <span @click="change(i.id,i.state)" :class="{red:i.state===2}"></span>
+            {{i.con}} <span @click="del(i.id,i.state)">删除</span>
+        </li>
+    </ul>
+    <ul v-else-if="state=='done'">
+        <li v-for="i in done">
+            <span @click="change(i.id,i.state)" :class="{red:i.state===2}"></span>
+            {{i.con}} <span @click="del(i.id,i.state)">删除</span>
+        </li>
+    </ul>
+    <ul v-else-if="state=='undo'">
+        <li v-for="i in undo">
+            <span @click="change(i.id,i.state)" :class="{red:i.state===2}"></span>
+            {{i.con}} <span @click="del(i.id,i.state)">删除</span>
+        </li>
+    </ul>
+    <div class="btn">
+        <span @click="changeState('all')">全部</span>
+        <span @click="changeState('done')">已完成</span>
+        <span @click="changeState('undo')">未完成</span>
+    </div>
+</div>
+<script>
+  new Vue({
+      el:".box",
+      data:{
+          text:"",
+          all:[],
+          done:[],
+          undo:[],
+          state:"all"
+      },
+      methods:{
+          add:function () {
+              var obj={
+                  id:Math.random()+new Date().getTime(),
+                  con:this.text,
+                  state:1
+              }
+              this.all.push(obj);
+              this.undo.push(obj);
+              this.text="";
+          },
+          del:function (id,state) {
+              if(state==1){
+                  this.all=this.all.filter(function(a){
+                      return a.id!=id;
+                  });
+                  this.undo=this.undo.filter(function(a){
+                      return a.id!=id;
+                  });
+              }else{
+                  this.all=this.all.filter(function(a){
+                      return a.id!=id;
+                  });
+                  this.done=this.done.filter(function(a){
+                      return a.id!=id;
+                  });
+              }
+          },
+          change:function (id,state) {
+              if(state==1){
+                  var obj=this.all.filter(function(a){
+                      return a.id==id;
+                  })[0];
+                  obj.state=2;
+                  this.done.push(obj);
+                  this.undo=this.undo.filter(function(a){
+                      return a.id!=obj.id;
+                  })
+              }else if(state==2){
+                  var obj=this.all.filter(function(a){
+                      return a.id==id;
+                  })[0];
+                  obj.state=1;
+                  this.done=this.done.filter(function(a){
+                      return a.id!=obj.id;
+                  })
+                  this.undo.push(obj);
+              }
+          },
+          changeState(str){
+              this.state=str;
+          }
+      }
+  })
+</script>
+</body>
+</html>
