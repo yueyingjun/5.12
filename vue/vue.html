@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="vue.min.js"></script>
+</head>
+<style>
+    *{
+        padding:0;
+        margin:0;
+    }
+
+    @font-face {font-family: "iconfont";
+        src: url('fonts/iconfont.eot?t=1494594914060'); /* IE9*/
+        src: url('fonts/iconfont.eot?t=1494594914060#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('fonts/iconfont.woff?t=1494594914060') format('woff'), /* chrome, firefox */
+        url('fonts/iconfont.ttf?t=1494594914060') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+        url('fonts/iconfont.svg?t=1494594914060#iconfont') format('svg'); /* iOS 4.1- */
+    }
+
+    .iconfont {
+        font-family:"iconfont" !important;
+        font-size:20px;
+        font-style:normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    .icon-del:before { content: "\e600"; }
+    .icon-com:before { content: "\e616"; }
+
+    .hxt_contain{
+        background: url("img/back.png") repeat;
+        color: #fff;
+        width: 100vw;
+        min-height: 100vh;
+        box-sizing: border-box;
+        z-index: 20;
+    }
+    .content-block{
+        padding: 40px 15px 0 15px;
+    }
+    .addBox{
+        display: flex;
+        justify-content: center;
+    }
+    .hxt_contain input {
+        display: block;
+        width: 80%;
+        height: 24px;
+        padding: 6px 12px;
+        font-size: 20px;
+        color: #555;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin: 0 0 30px 0;
+        font-family: 'Rouge Script', cursive;
+    }
+    .hxt-list{
+        background: url("img/back.png") repeat;
+        padding-bottom: 20px;
+        border-radius: 4px;
+    }
+    .list-opt{
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+    }
+    .hxt-list .list-opt .main-list{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 11px 15px 11px 10px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: inherit;
+    }
+    .list-left{
+        margin-right:10px;
+    }
+    .red{
+        color:red;
+        font-weight:bold;
+    }
+    .list-opt:after{
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 15px;
+        height: 1px;
+        content: '';
+        -webkit-transform: scaleY(.5);
+        transform: scaleY(.5);
+        background-color: #c8c7cc;
+    }
+    .receive_btn{
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+    }
+    .receive_btn .btn{
+        margin-right:10px;
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        touch-action: manipulation;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid  #fff;
+        border-radius: 4px;
+        color: #fff;
+        background-color: #000;
+    }
+    @media screen and (min-width:765px){
+
+        .content-block{
+            padding: 40px 40px 0 40px;
+        }
+        .addBox{
+            display: block;
+        }
+        .hxt-list{
+            width:90%;
+        }
+    }
+</style>
+<body>
+    <div class="hxt_contain">
+        <div class="content-block">
+            <div class="addBox">
+                <input type="text" v-model="text" @keydown.13="add" placeholder="添加条目">
+            </div>
+
+            <div class="receive_btn">
+                <div class="btn" @click="changeState('all')">全部</div>
+                <div class="btn" @click="changeState('done')">已读</div>
+                <div class="btn" @click="changeState('undo')">未读</div>
+            </div>
+            <ul class="hxt-list" v-if="state==='all'">
+                <li v-for="item in arr" class="list-opt">
+                    <div  class="main-list">
+                        <div class="list-left iconfont icon-com" @click="change(item.id,item.state)" :class="{red:item.state==2}"></div>
+                        <div class="list-right">{{item.con}}</div>
+                    </div>
+                    <div class="main-list iconfont icon-del" @click="del(item.id,item.state)"></div>
+                </li>
+            </ul>
+            <ul class="hxt-list" v-if="state==='done'">
+                <li v-for="item in done" class="list-opt">
+                    <div class="main-list">
+                        <div class="list-left iconfont icon-com" @click="change(item.id,item.state)" :class="{red:item.state==2}"></div>
+                        <div class="list-right">{{item.con}}</div>
+                    </div>
+                    <div class="main-list iconfont icon-del" @click="del(item.id,item.state)"></div>
+                </li>
+            </ul>
+            <ul class="hxt-list" v-if="state==='undo'">
+                <li v-for="item in undo" class="list-opt">
+                    <div class="main-list">
+                        <div class="list-left iconfont icon-com" @click="change(item.id,item.state)" :class="{red:item.state==2}"></div>
+                        <div class="list-right">{{item.con}}</div>
+                    </div>
+                    <div class="main-list iconfont icon-del" @click="del(item.id,item.state)"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script>
+    new Vue({
+        el:".hxt_contain",
+        data:{
+            text:"",
+//            arr:[],
+//            done:[],
+//            undo:[],
+            done:localStorage.done?JSON.parse(localStorage.done):[],
+            undo:localStorage.undo?JSON.parse(localStorage.undo):[],
+            arr:localStorage.arr?JSON.parse(localStorage.arr):[],
+            state:"all"
+        },
+        methods:{
+            add(){
+                let obj={
+                    id:Math.random()+new Date().getTime(),
+                    con:this.text,
+                    state:1
+                };
+                this.text="";
+                this.arr.push(obj);
+                this.undo.push(obj);
+                localStorage.arr= JSON.stringify(this.arr);
+                localStorage.undo= JSON.stringify(this.undo);
+            },
+            del(id,state){
+                if(state==1){
+                    this.arr=this.arr.filter(function (a) {
+                        return a.id!=id;
+                    });
+                    this.undo=this.undo.filter(function (a) {
+                        return a.id!=id;
+                    });
+                    localStorage.arr= JSON.stringify(this.arr);
+                    localStorage.undo= JSON.stringify(this.undo);
+                }else if(state==2){
+                    this.arr=this.arr.filter(function (a) {
+                        return a.id!=id;
+                    });
+                    this.done=this.done.filter(function (a) {
+                        return a.id!=id;
+                    });
+                    localStorage.arr= JSON.stringify(this.arr);
+                    localStorage.done= JSON.stringify(this.done);
+                }
+            },
+            change(id,state){
+                if(state==1){
+                    let obj=this.arr.filter(function (a) {
+                        return a.id==id;
+                    })[0];
+                    obj.state=2;
+                    this.done.push(obj);
+                    localStorage.done= JSON.stringify(this.done);
+                    this.undo=this.undo.filter(function (a) {
+                        return a.id!=id;
+                    });
+
+                    localStorage.undo= JSON.stringify(this.undo);
+                    this.arr.forEach(function (obj,index) {
+                        if(obj.id===id){
+                            obj.state=2;
+                        }
+                    });
+                    localStorage.arr= JSON.stringify(this.arr);
+
+                }else if(state==2){
+                    let obj=this.arr.filter(function (a) {
+                        return a.id==id;
+                    })[0];
+                    obj.state=1;
+                    this.done=this.done.filter(function (a) {
+                        return a.id!=id;
+                    });
+                    localStorage.done= JSON.stringify(this.done);
+                    this.undo.push(obj);
+                    localStorage.undo= JSON.stringify(this.undo);
+                    this.arr.forEach(function (obj,index) {
+                        if(obj.id===id){
+                            obj.state=1;
+                        }
+                    });
+                    localStorage.arr= JSON.stringify(this.arr);
+                }
+            },
+            changeState(str){
+                this.state=str;
+            }
+        }
+    })
+</script>
+</html>
