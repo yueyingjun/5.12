@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue.js"></script>
+</head>
+<body>
+<!--<div class="one" style="background: royalblue">-->
+      <!--&lt;!&ndash;{{say()}}&lt;!&ndash;methode&ndash;&gt;&ndash;&gt;-->
+
+    <!--&lt;!&ndash;{{say}}&lt;!&ndash; conputed &ndash;&gt;&ndash;&gt;-->
+   <!--<ul style="background: palevioletred" @click="add1">-->
+        <!--{{num1}}-->
+   <!--</ul>-->
+
+    <!--<ul @click="math" style="background: palevioletred">-->
+
+    <!--</ul>-->
+
+    <!--<ul @click="add2" style="background:burlywood ">-->
+        <!--&lt;!&ndash;{{add2}}&ndash;&gt;-->
+        <!--{{num2}}-->
+    <!--</ul>-->
+
+<!--</div>-->
+
+
+<!--<div @click="change()">-->
+    <!--{{name}}-->
+<!--</div>-->
+
+
+
+<div>
+    <input type="text" v-model="name" @keydown.13="push()">
+    <!--<span v-text=""name></span>-->
+    <!--<span :attr="name"></span>-->
+    <!--<span>{{name}}</span>-->
+    <ul v-if="state==1">
+        <li v-for="item in arr">{{item}}</li>
+    </ul>
+    <input type="button" value="隐藏" @click="changeState">
+
+
+</div>
+
+
+<script>
+    /*
+    * 控制器
+    * */
+//    new Vue({
+//        el:".one",  //相当于控制器，获取某一个标签
+//        data:{     //数据
+//            name:"小花",
+////            say:function () {
+////                alert(this.name)
+////            }
+//            num1:0,
+//            num2:2
+//        },
+//        methods:{    //方法   需要调用
+////            say:function () {
+////                alert(this.name)
+////            }
+//
+//            add1(){
+//                ++this.num1;
+//                alert(1)
+//            },
+//            math(){
+//                ++this.num2;
+//                alert(2);
+//            },
+////            add2(){
+////
+////
+//////                return this.num2
+////            }
+//
+//        },
+//        computed:{   //方法，不需要调用 可以提高性能//
+//            //      say:function () {
+////                alert(this.name)
+////            }
+//
+//            add2(){
+////                ++this.num2;
+////                alert(2);
+//                return this.num2;
+//            }
+//
+//
+////            math(){
+////                alert("ok")
+////            },
+//
+//        }
+//    })
+
+//    v-if和v-show区别
+//    v-if    在页面中不渲染
+//    v-show   渲染不显示
+
+
+
+
+
+
+
+
+
+    new Vue({
+        el:"div",
+        data:{
+            name:"",
+            arr:[],
+            state:1
+        },
+        methods:{
+            push(){
+                this.arr.push(this.name);
+            },
+            
+        }
+    })
+
+</script>
+
+
+
+<script>
+//    new Vue({
+//        el:"div",
+//        data:{
+//            name:"hello Vue"
+//        },
+//        methods:{
+//          change(){
+//              this.name="小可爱!"
+//          }
+//        },
+//        beforeCreate(){
+//            console.log("数据绑定之前")
+//        },  //
+//        created(){
+//            console.log("数据正在绑定")
+//        },        //
+//        beforeMount(){
+//            console.log("挂载之前")
+//        },         //
+//        mounted(){
+//            console.log("挂载完成")
+//        },           //
+//        beforeUpdate(){
+//            console.log("数据更新之前")
+//        },      //
+//        updated(){
+//            console.log("更新完毕")
+//        },    //
+//        activated(){
+//            console.log("组件调用")
+//        },    //
+//        deactivated(){
+//            console.log("组件停用")
+//        },      //
+//        beforeDestroy(){
+//            console.log("对象销毁之前")
+//        },    //
+//        destroyed(){
+//            console.log("对象销毁完成")
+//        }     //
+//    })
+</script>
+</body>
+</html>
