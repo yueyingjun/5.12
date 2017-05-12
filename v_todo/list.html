@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Schedule</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="list.css">
+    <script src="vue.js"></script>
+    <script src="list.js"></script>
+</head>
+<body>
+<div class="list">
+    <header class="bg-danger">
+        <span>Schedule</span>
+    </header>
+    <div class="add">
+        <div class="form-group has-success has-feedback">
+            <div class="input-group">
+                <input v-model="addnew" type="text" class="form-control" id="inputGroupSuccess3" aria-describedby="inputGroupSuccess3Status">
+                <span @click="addlist" class="input-group-addon btn btn-success">+</span>
+            </div>
+        </div>
+    </div>
+    <div class="sel">
+        <button type="button" @click="changeState('all')"  class="btn btn-success">全部</button>
+        <button type="button"  @click="changeState('un')" class="btn btn-success">未完成</button>
+        <button type="button"  @click="changeState('done')" class="btn btn-success">已完成</button>
+    </div>
+    <div class="liebiao">
+        <ul v-if="state=='all'">
+            <li v-for="item in all">
+                <span class="dian" :class="{wan:item.state==2}" @click="bian(item.id,item.state)"></span>
+                {{item.con}}
+                <span class="btn btn-danger" @click="del(item.id)">删除</span>
+            </li>
+        </ul>
+        <ul v-else-if="state=='un'" >
+            <li v-for="item in un">
+                <span class="dian" @click="bian(item.id,item.state)"></span>
+                {{item.con}}
+                <span class="btn btn-danger" @click="del(item.id)">删除</span>
+            </li>
+        </ul>
+        <ul v-else-if="state=='done'">
+            <li v-for="item in done">
+                <span :class="{wan:item.state==2}" @click="bian(item.id,item.state)"></span>
+                {{item.con}}
+                <span class="btn btn-danger" @click="del(item.id)">删除</span>
+            </li>
+        </ul>
+    </div>
+    <div>{{doneFun}}</div>
+</div>
+</body>
+</html>
