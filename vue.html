@@ -9,31 +9,32 @@
     <script src="vue.min.js"></script>
     <style>
         .container{
-            width:400px;
+            width:800px;
             position: absolute;
             height:10px;
-            left:0;top:30px;right:0;
+            left:0;top:100px;right:0;
             margin:auto;
-
         }
 
         .box{
-            width:100%;border:1px solid #ccc;
+            width:100%;
 
         }
         .box input{
-            width:90%;border:none;border-bottom: 1px solid #ccc;
+            width:90%;border-bottom: 1px solid #ccc;
             height:40px;
         }
         .box input:focus{
             outline: none;
         }
         li{
+            width: 100%;
+            height: 50px;
             overflow: hidden;
         }
         li span{
             float: left;
-            margin:0 20px;
+            margin:20px 20px;
         }
         li span:first-child{
             width:10px;height: 10px;
@@ -46,16 +47,22 @@
         }
 
         .red{
-            background:red;
+            background:blue;
         }
-
-
+        .opts{
+            width: 100%;height: 30px;
+        }
+        .opts button{
+            width:100px;height: 100%;
+            background: yellowgreen;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
         <div class="container">
                 <div class="box">
-                    <input type="text" v-model="text" @keydown.13="add">
+                    <input type="text" placeholder="请输入信息..." v-model="text" @keydown.13="add">
                     <br>
                     <ul v-if="state==='all'">
                         <li v-for="item in arr" >
