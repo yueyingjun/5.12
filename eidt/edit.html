@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="vue.js"></script>
+    <script src="jquery.min.js"></script>
+    <style>
+        .table{
+            width: 600px;
+            position: fixed;
+            left: 0;
+            top: 40px;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        .list{
+            position: relative;
+        }
+        .del{
+            position: absolute;
+            right: 20px;
+            top:10px;
+            font-size: 16px;
+            color: red;
+        }
+        .green{
+            color: green;
+        }
+    </style>
+</head>
+<body>
+<div class="table">
+    <div class="list-group">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon" >新建事项</div>
+                    <input type="text" v-model="text" @keydown.13="push" class="form-control" id="exampleInputAmount" placeholder="事项内容">
+                </div>
+            </div>
+        <a class="list-group-item active">
+            事项列表
+        </a>
+        <div v-if="state=='total'">
+            <a  v-for="item in total" class="list-group-item list">
+                <span @click="change(item.id,item.state)"  class="glyphicon glyphicon-check" :class="{green:item.state===2}"></span>
+                {{item.text}}
+                <span class="glyphicon glyphicon-remove-circle del" @click="del(item.id,item.state)"></span>
+            </a>
+        </div>
+        <div v-else-if="state=='done'">
+            <a  v-for="item in done" class="list-group-item list">
+                <span @click="change(item.id,item.state)"  class="glyphicon glyphicon-check" :class="{green:item.state===2}"></span>
+                {{item.text}}
+                <span class="glyphicon glyphicon-remove-circle del" @click="del(item.id,item.state)"></span>
+            </a>
+        </div>
+        <div v-else="state=='todu'" >
+            <a v-for="item in todo" class="list-group-item list">
+                <span @click="change(item.id,item.state)"  class="glyphicon glyphicon-check" :class="{green:item.state===2}"></span>
+                {{item.text}}
+                <span class="glyphicon glyphicon-remove-circle del" @click="del(item.id,item.state)"></span>
+            </a>
+        </div>
+
+        <ul class="nav nav-pills">
+            <li role="presentation" @click="changeState('total')" class="active"><a >总事项</a></li>
+            <li role="presentation" @click="changeState('done')" ><a >已完成事项</a></li>
+            <li role="presentation" @click="changeState('todu')"><a >未完成事项</a></li>
+        </ul>
+        <script>
+            $().ready(function () {
+                $(".nav li").click(function () {
+
+                    $(".nav li").removeClass("active").eq($(this).index()).addClass("active");
+
+                })
+            })
+        </script>
+    </div>
+</div>
+</body>
+<script>
+     new Vue({
+         el:".table",
+         data:{
+             text:"",
+             total:[],
+             done:[],
+             todo:[],
+             state:"total"
+         },
+         methods:{
+            push(){
+                var text=this.text;
+                var obj= {
+                    id: Math.random() + new Date().getTime(),
+                    text:text,
+                    state:1
+                }
+                this.total.push(obj);
+                this.todo=this.total;
+            },
+            change(id,state){
+                if(state==1){
+                    var obj=this.total.filter(function (a) {
+                        return a.id==id;
+                    })[0];
+                    obj.state=2;
+                    this.done.push(obj);
+                    this.todo=this.todo.filter(function (a) {
+                        return a.id!=id;
+                    })
+                }else if(state==2){
+                    var obj=this.total.filter(function (a) {
+                        return a.id==id;
+                    })[0];
+                    obj.state=1;
+                    this.todo.push(obj);
+                    this.done=this.done.filter(function (a) {
+                        return a.id!=id;
+                    })
+                }
+            },
+             del(id,state){
+                 if(state==1){
+
+                     this.total=this.total.filter(function(a){
+                         return a.id!=id;
+                     });
+
+                     this.todo=this.todo.filter(function(a){
+                         return a.id!=id;
+                     });
+                 }else{
+                     this.total=this.total.filter(function(a){
+                         return a.id!=id;
+                     });
+
+                     this.done=this.done.filter(function(a){
+                         return a.id!=id;
+                     });
+                 }
+             },
+             changeState(state){
+                 this.state=state;
+             }
+
+
+         }
+     })
+</script>
+</html>
