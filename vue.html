@@ -1,185 +1,69 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Title</title>
     <script src="vue.min.js"></script>
-    <style>
-        .container{
-            width:400px;
-            position: absolute;
-            height:10px;
-            left:0;top:30px;right:0;
-            margin:auto;
-
-        }
-
-        .box{
-            width:100%;border:1px solid #ccc;
-
-        }
-        .box input{
-            width:90%;border:none;border-bottom: 1px solid #ccc;
-            height:40px;
-        }
-        .box input:focus{
-            outline: none;
-        }
-        li{
-            overflow: hidden;
-        }
-        li span{
-            float: left;
-            margin:0 20px;
-        }
-        li span:first-child{
-            width:10px;height: 10px;
-            border:1px solid  #000;
-            border-radius: 50%;
-        }
-
-        ul li{
-            list-style: none;
-        }
-
-        .red{
-            background:red;
-        }
-
-
-    </style>
 </head>
 <body>
-        <div class="container">
-                <div class="box">
-                    <input type="text" v-model="text" @keydown.13="add">
-                    <br>
-                    <ul v-if="state==='all'">
-                        <li v-for="item in arr" >
-                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
-
-                           </span>
-                           <span> {{item.con}}</span>
-                            <span @click="del(item.id,item.state)">删除</span>
-                        </li>
-
-                    </ul>
-
-                    <ul v-else-if="state==='done'">
-                        <li v-for="item in done" >
-                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
-
-                           </span>
-                            <span> {{item.con}}</span>
-                            <span @click="del(item.id,item.state)">删除</span>
-                        </li>
-
-                    </ul>
-
-
-                    <ul v-else-if="state==='undo'">
-                        <li v-for="item in undo" >
-                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
-
-                           </span>
-                            <span> {{item.con}}</span>
-                            <span @click="del(item.id,item.state)">删除</span>
-                        </li>
-
-                    </ul>
-                    <div class="opts">
-                        <button @click="changeState('all')">全部</button>
-                        <button @click="changeState('done')">完成</button>
-                        <button @click="changeState('undo')">未完成</button>
-                    </div>
-                </div>
-        </div>
-
-        <script>
-
-            new Vue({
-                el:".container",
-                data:{
-                    text:"",
-                    arr:[],
-                    done:[],
-                    undo:[],
-                    state:"all"
-                },
-                methods:{
-                    add(){
-
-                        var obj={
-                            id:Math.random()+new Date().getTime(),
-                            con:this.text,
-                            state:1
-                        }
-                        this.text="";
-                        this.arr.push(obj);
-                        this.undo.push(obj);
-                    },
-                    del(id,state){
-                        if(state==1){
-
-                            this.arr=this.arr.filter(function(a){
-                                return a.id!=id;
-                            });
-
-                            this.undo=this.undo.filter(function(a){
-                                return a.id!=id;
-                            });
-                        }else{
-                            this.arr=this.arr.filter(function(a){
-                                return a.id!=id;
-                            });
-
-                            this.done=this.done.filter(function(a){
-                                return a.id!=id;
-                            });
-                        }
-                    },
-
-                    change(id,state){
-                            if(state==1){
-
-                                var obj=this.arr.filter(function(a){
-                                        return a.id==id
-                                })[0];
-
-                                obj.state=2;
-
-                                this.done.push(obj);
-
-
-                                this.undo=this.undo.filter(function(a){
-
-                                    return a.id!=id;
-                                })
-
-                            }else if(state==2){
-                                var obj=this.arr.filter(function(a){
-                                    return a.id==id
-                                })[0];
-
-                                obj.state=1;
-
-                                this.done=this.done.filter(function(a){
-
-                                    return a.id!=id;
-                                })
-
-                                this.undo.push(obj);
-
-                            }
-                    },
-                    changeState(str){
-                        this.state=str;
-                    }
-                }
-            })
-        </script>
+    <div v-on:click="add1" style="background: red">
+        <ul style="background: blue">{{num1}}</ul>
+        <ul v-on:click="math">计算</ul>
+        <ul style="background: green">{{add2}}</ul>
+    </div>
+    <div class="two">
+        <input type="text" v-model="name"  @keydown.13="add">
+        <ul v-if="state==1">
+            <li v-for="item in arr">{{item}}</li>
+        </ul>
+        <input type="submit" value="隐藏" @click="changeState">
+    </div>
 </body>
+<script>
+    /*
+    控制器的思想
+        el指定控制的元素 挂载：也可以用：对象.$mount=""()
+        data等同于$scope 放到data上的属性就相当于放到了实例化的对象上
+        methods专门放方法用的时候得调用此方法
+        computed里的方法用的时候就不用调用 效率更高 放不是每次都执行的方法
+        点击：v-on:click v-on可以用@代替  v-blind:属性="" v-blind可以用:代替
+        放在method上的方法在执行事件时它里面的方法都会走一遍 computed不会走不相关的方法 效率高
+    */
+    new Vue({
+        el:"div",
+        data:{
+            num1:0,
+            num2:0
+        },
+        methods:{
+          add1:function(){
+              ++this.num1;
+          },
+          math:function(){
+              ++this.num2;
+          }
+        },
+        computed:{
+            add2:function(){
+                return  this.num2+1;
+            }
+        }
+    })
+    new Vue({
+        el:".two",
+        data:{
+            name:"",
+            arr:[],
+            state:1
+        },
+       methods:{
+            add:function(){
+                this.arr.push(this.name);
+            },
+            changeState:function(){
+               this.state++;
+            }
+       }
+    })
+</script>
 </html>
