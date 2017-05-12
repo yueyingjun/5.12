@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="font/iconfont.css">
+    <script src="js/vue.min.js"></script>
+</head>
+<style>
+    body,html,ul{
+        padding:0;
+        margin:0;
+        background: linear-gradient(-45deg,#D6EAFF 0,#FFEFDE 100%);
+        list-style: none;
+    }
+    header{
+        /*width:1000px;*/
+        /*height:60px;*/
+        /*text-align:center;*/
+        text-align: center;
+        margin-bottom:40px;
+    }
+    .box{
+        /*margin-top:30px;*/
+        width:1000px;
+        /*height:500px;*/
+        margin:auto;
+        /*background:#ccc;*/
+    }
+    .all{
+        width:100%;
+        height:100%;
+    }
+    .title {
+        width: 100%;
+        height: 50px;
+        border-radius: 5px;
+    }
+    .title li{
+        width:33.33%;
+        height:100%;
+        float:left;
+        background:#1a242f;
+        color:#fff;
+        text-align: center;
+        line-height:50px;
+        font-size:20px;
+    }
+    /*.title li:nth-child(2){*/
+        /*background:#2c3e50;*/
+    /*}*/
+    /*.title li:nth-child(3){*/
+        /*background:#2c3e50;*/
+    /*}*/
+    .con{
+        width: 100%;
+        margin-top:20px;
+    }
+    .con li{
+        width:100%;
+        /*padding-left:10%;*/
+        height:40px;
+        font-size:18px;
+        line-height:40px;
+        font-weight:bold;
+        position:relative;
+    }
+    footer{
+        width:1000px;
+        margin:auto;
+        text-align: center;
+    }
+    header input{
+        width:800px;
+        height:40px;
+        /*margin:auto;*/
+        font-size:20px;
+    }
+    .shan{
+        width:70px;
+        height:30px;
+        position:absolute;
+        right:20px;
+        top:5px;
+        /*background:red;*/
+    }
+    .con li span{
+        float:left;
+    }
+    .con li span:first-child{
+        display:inline-block;
+        width:30px;height:30px;
+        border:1px solid  #000;
+        border-radius: 50%;
+        margin-right:30px;
+        /*position:absolute;*/
+        /*top:15px;*/
+        /*left:0;*/
+    }
+
+    .red{
+        background:url("yes.png");
+        background-size:100% 100%;
+    }
+</style>
+<body>
+<div class="all">
+   <header>
+       <h1>To Do List</h1>
+       <input type="text" placeholder="Writer something here....." v-model="text"  @keydown.13="add">
+   </header>
+    <div class="box">
+        <ul class="title">
+            <li @click="changeState('all')">All</li>
+            <li @click="changeState('done')">Done</li>
+            <li @click="changeState('undo')">Todo</li>
+        </ul>
+
+        <ul v-if="state==='all'" class="con">
+            <li v-for="item in arr" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                <span> {{item.con}}</span>
+                <!--<span  class="shan" @click="del(item.id,item.state)">删除</span>-->
+                <input type="button" value="删除" class="shan" @click="del(item.id,item.state)">
+            </li>
+
+        </ul>
+
+        <ul v-else-if="state==='done'" class="con">
+            <li v-for="item in done" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                <span> {{item.con}}</span>
+                <!--<span class="shan" @click="del(item.id,item.state)">删除</span>-->
+                <input type="button" value="删除" class="shan" @click="del(item.id,item.state)">
+            </li>
+
+        </ul>
+
+
+        <ul v-else-if="state==='undo'" class="con">
+            <li v-for="item in undo" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                <span> {{item.con}}</span>
+                <!--<span  class="shan" @click="del(item.id,item.state)">删除</span>-->
+                <input type="button" value="删除" class="shan" @click="del(item.id,item.state)">
+            </li>
+
+        </ul>
+
+    </div>
+</div>
+   <script>
+
+       new Vue({
+           el:".all",
+           data:{
+               text:"",
+               arr:[],
+               done:[],
+               undo:[],
+               state:"all"
+           },
+           methods:{
+               add(){
+                   var obj={
+                       id:Math.random()+new Date().getTime(),
+                       con:this.text,
+                       state:1
+                   }
+                   this.text="";
+                   this.arr.push(obj);
+                   this.undo.push(obj);
+               },
+               del(id,state){
+                   if(state==1){
+                       this.arr=this.arr.filter(function(a){
+                           return a.id!=id;
+                       });
+                       this.undo=this.undo.filter(function(a){
+                           return a.id!=id;
+                       });
+                   }else{
+                       this.arr=this.arr.filter(function(a){
+                           return a.id!=id;
+                       });
+                       this.done=this.done.filter(function(a){
+                           return a.id!=id;
+                       });
+                   }
+               },
+               change(id,state){
+                   if(state==1){
+                       var obj=this.arr.filter(function(a){
+                           return a.id==id
+                       })[0];
+                       obj.state=2;
+                       this.done.push(obj);
+                       this.undo=this.undo.filter(function(a){
+                           return a.id!=id;
+                       })
+                   }else if(state==2){
+                       var obj=this.arr.filter(function(a){
+                           return a.id==id
+                       })[0];
+                       obj.state=1;
+                       this.done=this.done.filter(function(a){
+                           return a.id!=id;
+                       })
+                       this.undo.push(obj);
+                   }
+               },
+               changeState(str){
+                   this.state=str;
+               }
+           }
+       })
+   </script>
+</body>
+</html>
