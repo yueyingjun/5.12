@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="vue.min.js"></script>
+    <style>
+        body,html{
+            width: 100vw;
+            height:100vh;
+            /*background: #9acfea;*/
+            background: url("img/ti.jpg") no-repeat;
+        }
+        .container{
+            width:300px;
+            position: absolute;
+            height:10px;
+            left:0;top:30px;right:0;
+            margin:auto;
+
+
+        }
+
+        .box{
+            width:100%;border:1px solid #ccc;
+
+
+        }
+        .box input{
+            width:90%;border:none;border-bottom: 1px solid #ccc;
+            height:40px;
+             background: #00b3ee;
+            left:20px;
+        }
+        .box input:focus{
+            outline: none;
+        }
+        li{
+            overflow: hidden;
+        }
+        li span{
+            float: left;
+            margin:0 20px;
+        }
+        li span:first-child{
+            width:10px;height: 10px;
+            border:1px solid  #000;
+            border-radius: 50%;
+        }
+
+        ul li{
+            list-style: none;
+        }
+
+        .red{
+            background:red;
+        }
+
+        .opts{
+            margin: 0auto;
+        }
+button{
+    background:red;
+    border-radius: 20%;
+    margin:0 auto;
+}
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="box">
+        <input type="text" v-model="text" @keydown.13="add">
+        <br>
+        <ul v-if="state==='all'">
+            <li v-for="item in arr" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                <span> {{item.con}}</span>
+                <span @click="del(item.id,item.state)">删除</span>
+            </li>
+
+        </ul>
+
+        <ul v-else-if="state==='done'">
+            <li v-for="item in done" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                <span> {{item.con}}</span>
+                <span @click="del(item.id,item.state)">删除</span>
+            </li>
+
+        </ul>
+
+
+        <ul v-else-if="state==='undo'">
+            <li v-for="item in undo" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                <span> {{item.con}}</span>
+                <span @click="del(item.id,item.state)">删除</span>
+            </li>
+
+        </ul>
+        <div class="opts">
+            <button @click="changeState('all')">全部</button>
+            <button @click="changeState('done')">完成</button>
+            <button @click="changeState('undo')">未完成</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    new Vue({
+        el:".container",
+        data:{
+            text:"",
+            arr:[],
+            done:[],
+            undo:[],
+            state:"all"
+        },
+        methods:{
+            add(){
+
+                var obj={
+                    id:Math.random()+new Date().getTime(),
+                    con:this.text,
+                    state:1
+                }
+                this.text="";
+                this.arr.push(obj);
+                this.undo.push(obj);
+            },
+            del(id,state){
+                if(state==1){
+
+                    this.arr=this.arr.filter(function(a){
+                        return a.id!=id;
+                    });
+
+                    this.undo=this.undo.filter(function(a){
+                        return a.id!=id;
+                    });
+                }else{
+                    this.arr=this.arr.filter(function(a){
+                        return a.id!=id;
+                    });
+
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    });
+                }
+            },
+
+            change(id,state){
+                if(state==1){
+
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id
+                    })[0];
+
+                    obj.state=2;
+
+                    this.done.push(obj);
+
+
+                    this.undo=this.undo.filter(function(a){
+
+                        return a.id!=id;
+                    })
+
+                }else if(state==2){
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id
+                    })[0];
+
+                    obj.state=1;
+
+                    this.done=this.done.filter(function(a){
+
+                        return a.id!=id;
+                    })
+
+                    this.undo.push(obj);
+
+                }
+            },
+            changeState(str){
+                this.state=str;
+            }
+        }
+    })
+</script>
+</body>
+</html>
