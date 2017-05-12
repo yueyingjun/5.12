@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="vue.min.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<div class="vipbox">
+    <div class="header">
+        <h1>备忘录</h1>
+    </div>
+
+
+
+    <div class="container">
+        <div class="box">
+            <div class="kuang">
+                <input type="text" v-model="text" @keydown.13="add" placeholder="请输入备忘">
+            </div>
+
+            <br>
+            <ul v-if="state==='all'">
+                <li v-for="item in arr" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                    <span> {{item.con}}</span>
+
+
+                    <!--<template v-for="v in demand">-->
+                        <!--<span>需求创建时间{{v.demand_createtime}}</span>-->
+                    <!--</template>-->
+
+
+                    <div @click="del(item.id,item.state)" class="sc">删除</div>
+                </li>
+
+            </ul>
+
+
+
+
+
+            <ul v-else-if="state==='done'">
+                <li v-for="item in done" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                    <span> {{item.con}}</span>
+                    <div @click="del(item.id,item.state)" class="sc">删除</div>
+                </li>
+
+            </ul>
+
+
+            <ul v-else-if="state==='undo'">
+                <li v-for="item in undo" >
+                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
+
+                           </span>
+                    <span> {{item.con}}</span>
+                    <div @click="del(item.id,item.state)" class="sc">删除</div>
+                </li>
+
+            </ul>
+
+
+
+            <div class="opts">
+                <div class="bottom" style="background-color: lightgreen" @click="changeState('all')">全部</div>
+                <div class="bottom" style="background-color: palevioletred" @click="changeState('done')">完成</div>
+                <div class="bottom" style="background-color: cornflowerblue" @click="changeState('undo')">未完成</div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+</body>
+<script>
+    new Vue({
+        el:".container",
+        data:{
+            text:"",
+            arr:[],
+            done:[],
+            undo:[],
+            state:"all"
+        },
+        methods:{
+            add(){
+                var obj={
+                    id:Math.random()+new Date().getTime(),
+                    con:this.text,
+                    state:1
+                }
+                this.text=""
+                this.arr.push(obj)
+                this.undo.push(obj)
+            },
+            del(id,state){
+                if(state==1) {
+                    this.arr = this.arr.filter(function (a) {
+                        return a.id != id;
+                    });
+                    this.undo = this.undo.filter(function (a) {
+                        return a.id != id;
+                    })
+                }else{
+                    this.arr=this.arr.filter(function (a) {
+                        return a.id!=id;
+                    })
+                    this.done=this.done.filter(function (a) {
+                        return a.id!=id;
+                    })
+                }
+            },
+            change(id,state){
+                if(state==1){
+                    var obj=this.arr.filter(function (a) {
+                        return a.id==id;
+                    })[0];
+                    obj.state=2;
+                    this.done.push(obj);
+                    this.undo=this.undo.filter(function (a) {
+                        return a.id!=id;
+                    })
+//                    ovj[0].state(obj[0]);
+                }else if(state==2){
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id
+                    })[0];
+                    obj.state=1;
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    })
+                    this.undo.push(obj);
+                }
+            },
+            changeState(str){
+                this.state=str;
+            }
+        }
+    })
+</script>
+<script>
+//    new Vue({
+//        el:"template",
+//        data:{
+//            demand:[]
+//        },
+//    })
+//    Vue.filter('time', function (value) {
+//        return new Date(parseInt(value) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+//    })
+</script>
+</html>
