@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="vue.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="topCon">Todolist</div>
+    <div class="box">
+        <div>
+            <input class="shuru" type="text" v-model="text" @keydown.13="add">
+        </div>
+
+        <ul class="opts">
+            <li @click="changeState('all')">
+                <span class="optslist">全部</span>
+                <span class="jiantou"></span>
+                <ul class="conul">
+                    <li v-for="item in arr">
+                        <input type="checkbox" @click="change(item.id,item.state)">
+                        <span class="textwz">{{item.con}}</span>
+                        <span class="delBtn" @click="del(item.id,item.state)">删除</span>
+                    </li>
+                </ul>
+            </li>
+            <li @click="changeState('done')">
+                <span class="optslist">已完成</span>
+                <span class="jiantou"></span>
+                <ul class="conul">
+                    <li v-for="item in done">
+                        <input type="checkbox" @click="change(item.id,item.state)">
+                        <span class="textwz">{{item.con}}</span>
+                        <span class="delBtn" @click="del(item.id,item.state)">删除</span>
+                    </li>
+                </ul>
+            </li>
+            <li @click="changeState('undo')">
+                <span class="optslist">未完成</span>
+                <span class="jiantou"></span>
+                <ul class="conul">
+                    <li v-for="item in undo">
+                        <input type="checkbox" @click="change(item.id,item.state)">
+                        <span class="textwz">{{item.con}}</span>
+                        <span class="delBtn" @click="del(item.id,item.state)">删除</span>
+                    </li>
+                </ul>
+
+            </li>
+        </ul>
+
+    </div>
+</div>
+</body>
+</html>
+<script>
+    new Vue({
+        el:".container",
+        data:{
+            text:"",
+            arr:[],
+            done:[],
+            undo:[],
+            state:"all"
+        },
+        methods:{
+            add(){
+                var obj={
+                    id:Math.random()+new Date().getTime(),
+                    con:this.text,
+                    state:1
+                }
+                this.text="";
+                this.arr.push(obj);
+                this.undo.push(obj);
+            },
+            del(id,state){
+                if(state==1){
+                    this.arr=this.arr.filter(function(a){
+                        return a.id!=id;
+                    });
+                    this.undo=this.undo.filter(function(a){
+                        return a.id!=id;
+                    });
+                }else{
+                    this.arr=this.arr.filter(function(a){
+                        return a.id!=id;
+                    });
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    });
+                }
+            },
+            change(id,state){
+                if(state==1){
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id
+                    })[0];
+                    obj.state=2;
+                    this.done.push(obj);
+                    this.undo=this.undo.filter(function(a){
+                        return a.id!=id;
+                    })
+                }else if(state==2){
+                    var obj=this.arr.filter(function(a){
+                        return a.id==id
+                    })[0];
+                    obj.state=1;
+                    this.done=this.done.filter(function(a){
+                        return a.id!=id;
+                    })
+                    this.undo.push(obj);
+                }
+            },
+            changeState(str){
+                this.state=str;
+            }
+        }
+    })
+</script>
