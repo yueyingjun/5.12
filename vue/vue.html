@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="vue.js"></script>
+</head>
+<style>
+    div{
+        width: 500px;height: 500px;background: red;
+    }
+    span{
+        width: 300px;height:300px;background: blue;display: block;
+
+    }
+    p{
+        width: 100px;height: 100px;background: green;
+
+    }
+</style>
+<body>
+    <div class="one" @click="add1">
+        {{name}}
+        <!--{{say()}}-->
+        <!--{{say}}-->
+        {{num1}}
+        <span @click="add2">{{num2}}
+            <p @click="add3">{{num3}}</p>
+            <p>{{add4}}</p>
+        </span>
+
+    </div>
+
+    <script>
+        new Vue({
+            el:".one",
+            data:{
+                num1:0,
+                num2:0,
+                num3:0,
+                name:"zhangsan",
+//                say:function () {
+//                    alert(this.name)
+//                }
+            },
+            methods:{
+//                say:function () {
+//                    alert(this.name)
+//                }
+                add1(){
+                    alert(1)
+                    this.num1++;
+                },
+                add2(){
+                    alert(2)
+                    this.num2++;
+                },
+                add3(){
+                    alert(3)
+                    this.num3=this.num1+this.num2;
+                },
+
+            },
+            computed:{//效率高一些，不用调用，直接运行,不受渲染的影响
+                say:function () {
+                    alert(this.name)
+                },
+                add4(){
+                    alert(4)
+                }
+            }
+        })
+    </script>
+</body>
+</html>
