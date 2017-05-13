@@ -6,180 +6,85 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="vue.min.js"></script>
-    <style>
-        .container{
-            width:400px;
-            position: absolute;
-            height:10px;
-            left:0;top:30px;right:0;
-            margin:auto;
-
-        }
-
-        .box{
-            width:100%;border:1px solid #ccc;
-
-        }
-        .box input{
-            width:90%;border:none;border-bottom: 1px solid #ccc;
-            height:40px;
-        }
-        .box input:focus{
-            outline: none;
-        }
-        li{
-            overflow: hidden;
-        }
-        li span{
-            float: left;
-            margin:0 20px;
-        }
-        li span:first-child{
-            width:10px;height: 10px;
-            border:1px solid  #000;
-            border-radius: 50%;
-        }
-
-        ul li{
-            list-style: none;
-        }
-
-        .red{
-            background:red;
-        }
-
-
-    </style>
+    <script src="js/vue.min.js"></script>
 </head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    div{
+        width: 500px;
+        height: 600px;
+        border: 1px solid #000;
+    }
+    ul{
+        width: 500px;
+        height: 200px;
+    }
+</style>
 <body>
-        <div class="container">
-                <div class="box">
-                    <input type="text" v-model="text" @keydown.13="add">
-                    <br>
-                    <ul v-if="state==='all'">
-                        <li v-for="item in arr" >
-                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
-
-                           </span>
-                           <span> {{item.con}}</span>
-                            <span @click="del(item.id,item.state)">删除</span>
-                        </li>
-
-                    </ul>
-
-                    <ul v-else-if="state==='done'">
-                        <li v-for="item in done" >
-                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
-
-                           </span>
-                            <span> {{item.con}}</span>
-                            <span @click="del(item.id,item.state)">删除</span>
-                        </li>
-
-                    </ul>
-
-
-                    <ul v-else-if="state==='undo'">
-                        <li v-for="item in undo" >
-                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
-
-                           </span>
-                            <span> {{item.con}}</span>
-                            <span @click="del(item.id,item.state)">删除</span>
-                        </li>
-
-                    </ul>
-                    <div class="opts">
-                        <button @click="changeState('all')">全部</button>
-                        <button @click="changeState('done')">完成</button>
-                        <button @click="changeState('undo')">未完成</button>
-                    </div>
-                </div>
-        </div>
-
-        <script>
-
-            new Vue({
-                el:".container",
-                data:{
-                    text:"",
-                    arr:[],
-                    done:[],
-                    undo:[],
-                    state:"all"
-                },
-                methods:{
-                    add(){
-
-                        var obj={
-                            id:Math.random()+new Date().getTime(),
-                            con:this.text,
-                            state:1
-                        }
-                        this.text="";
-                        this.arr.push(obj);
-                        this.undo.push(obj);
-                    },
-                    del(id,state){
-                        if(state==1){
-
-                            this.arr=this.arr.filter(function(a){
-                                return a.id!=id;
-                            });
-
-                            this.undo=this.undo.filter(function(a){
-                                return a.id!=id;
-                            });
-                        }else{
-                            this.arr=this.arr.filter(function(a){
-                                return a.id!=id;
-                            });
-
-                            this.done=this.done.filter(function(a){
-                                return a.id!=id;
-                            });
-                        }
-                    },
-
-                    change(id,state){
-                            if(state==1){
-
-                                var obj=this.arr.filter(function(a){
-                                        return a.id==id
-                                })[0];
-
-                                obj.state=2;
-
-                                this.done.push(obj);
+<!--<div  @click="add1">-->
+    <!--<ul style="background: red;" >-->
+       <!--{{num1}}-->
+    <!--</ul>-->
+    <!--<ul style="background: blue;" @click="math">-->
+       <!--计算-->
+    <!--</ul>-->
+    <!--<ul style="background: yellow;">-->
+       <!--{{add2}}-->
+    <!--</ul>-->
+<!--</div>-->
+<div class="mess">
+<input v-model="name" @keydown.13="push"  type="text"><br>
+    <ul style="background: red;">
+        <li v-for="item in arr">
+               {{item}}
+        </li>
+    </ul>
+</div>
+<script>
+//   new Vue({
+//       el:"div",
+//       data:{
+//           message:"张三",
+//           num1:0,
+//           num2:0
+//       },
+//       methods:{
+//          add1(){
+//              ++this.num1
+//          },
+//          math(){
+//              ++this.num2;
+//          }
+//       },
+//       computed:{
+//           add2(){
+//               return this.num2;
+////               console.log("数据绑定之前 正在绑定 挂载到相应的元素上 挂载前 挂载完 数据更新之前 " +
+////                   "更新完毕    组件调用 停用   对象销毁之前 对象销毁了")
+//           }
+//       }
+//
+//   })
+    var obj=new Vue({
+        el:".mess",
+        data:{
+            name:"",
+            arr:[]
+        },
+        methods:{
+            push(){
+                this.arr.push(this.name);
+            }
 
 
-                                this.undo=this.undo.filter(function(a){
+        }
 
-                                    return a.id!=id;
-                                })
+    })
+</script>
 
-                            }else if(state==2){
-                                var obj=this.arr.filter(function(a){
-                                    return a.id==id
-                                })[0];
-
-                                obj.state=1;
-
-                                this.done=this.done.filter(function(a){
-
-                                    return a.id!=id;
-                                })
-
-                                this.undo.push(obj);
-
-                            }
-                    },
-                    changeState(str){
-                        this.state=str;
-                    }
-                }
-            })
-        </script>
 </body>
 </html>
