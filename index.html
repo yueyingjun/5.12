@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="js/vue.min.js"></script>
+		<link rel="stylesheet" href="css/index.css" />
+	</head>
+	<body>
+		<!--
+			控制器思想
+			angular：$scope
+			vue:data
+			方法放在  methods 里
+			methods:{
+				say:function(){
+					alert(this.name);
+				}
+			},
+			computed:{        不用调用  效率更高
+				say:function(){
+					alert(this.name);
+				}
+			}
+			
+			各放各的效率高
+			
+			
+			v-show  里面有东西
+			v-if    里面没东西
+			v-else-if
+		-->
+		<div @click="add1">
+			<ul>{{num1}}</ul>
+			<ul @click="math">计算</ul>
+			<ul>{{add2}}</ul>
+			
+		</div>
+		<script type="text/javascript">
+			new Vue({
+				el:"div",
+				data:{                //一般放属性
+					num1:0,
+					num2:2,
+				},
+				methods:{        //模块内数据更新   js里全部执行一遍     一般放方法
+					add1(){
+						alert(1);
+						++this.num1;
+					},
+                    math(){
+                    	++this.num2;
+                    }
+				},
+				computed:{       //一般放用于计算的
+					add2(){
+						alert(2);
+						return this.num2;
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
