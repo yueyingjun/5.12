@@ -26,12 +26,15 @@ html,body{
 	bottom: 0;
 }
 .btnbox button{
-	width: 90px;
-	height: 40px;
+	width: 80px;
+	height: 35px;
 	border-radius: 5px;
 	float: left;
 	margin-left: 15px;
 	color: #666;
+}
+.btnbox button:hover{
+	color: #FFFFFF;
 }
 .shuru{
 	margin: 35px auto;
@@ -41,7 +44,7 @@ html,body{
 	float: left;
 	width: 30%;
 	height: 80%;
-	background: #ccc;
+	background-image: url(../img/bg_left.png);
 }
 ul{
 	margin-top: 20px;
@@ -49,28 +52,37 @@ ul{
 li{
     overflow: hidden;
     width: 100%;
-    height: 30px;
-    line-height: 30px;
+    height: 60px;
+    /*line-height: 30px;*/
     color: white;
     
    }
 li span{
     float: left;
     margin:0 20px;
+    height: 30px;
+    line-height: 30px;
     cursor: pointer;
       }
-li span:first-child{
-    width:10px;height: 10px;
-    border:1px solid  #fff;
-    border-radius: 50%;
-    margin-top: 10px;
+li span:nth-child(1){
+	width: 100%;
+}
+li span:nth-child(2){
+	line-height: 30px;
         }
+li span:nth-child(3){
+	line-height: 30px;
+}
 li span:last-child{
+	line-height: 30px;
 	float: right;
+}
+li span:last-child:hover{
+	color: red;
 }
 ul li{
     list-style: none;
         }
-.red{
-    background:red;
+.green{
+    color: green;
     }
