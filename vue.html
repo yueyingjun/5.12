@@ -1,107 +1,71 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="vue.min.js"></script>
-    <style>
-        .container{
-            width:400px;
-            position: absolute;
-            height:10px;
-            left:0;top:30px;right:0;
-            margin:auto;
-
-        }
-
-        .box{
-            width:100%;border:1px solid #ccc;
-
-        }
-        .box input{
-            width:90%;border:none;border-bottom: 1px solid #ccc;
-            height:40px;
-        }
-        .box input:focus{
-            outline: none;
-        }
-        li{
-            overflow: hidden;
-        }
-        li span{
-            float: left;
-            margin:0 20px;
-        }
-        li span:first-child{
-            width:10px;height: 10px;
-            border:1px solid  #000;
-            border-radius: 50%;
-        }
-
-        ul li{
-            list-style: none;
-        }
-
-        .red{
-            background:red;
-        }
-
-
-    </style>
+	<meta charset="UTF-8" />
+	<title>vue</title>
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/vue.css" />
+	<script src="js/jquery.min.js"></script>
+	<script src="js/vue.min.js"></script>
 </head>
 <body>
-        <div class="container">
-                <div class="box">
-                    <input type="text" v-model="text" @keydown.13="add">
-                    <br>
-                    <ul v-if="state==='all'">
-                        <li v-for="item in arr" >
-                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
-
+	<div class="bigbox">
+		<div class="box">
+			<!--输入框-->
+			<div class="form-group search shuru">
+               <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+                   <div class="input-group">
+                       <div class="input-group-addon">
+                          <span class="glyphicon glyphicon-search"></span>
+                       </div>
+                   <input type="text" class="form-control" id="exampleInputAmount" placeholder="待办事项" ng-model="search" v-model="text" @keydown.13="add">
+                   </div>
+             </div>
+            <!--按钮--> 
+            <div class="btnbox">
+            	     <button @click="changeState('all')" style="margin-left: 0;">全部</button>
+                     <button @click="changeState('done')">完成</button>
+                     <button @click="changeState('undo')">未完成</button>
+            </div>
+		</div>
+		<div class="left">
+			
+	       <ul v-if="state==='all'">
+               <li v-for="item in arr" >
+                 <span>{{item.time}}</span><br>
+                 <span @click="change(item.id,item.state)" :class="{green:item.state===2}" class="glyphicon glyphicon-ok-sign doneBtn">
                            </span>
-                           <span> {{item.con}}</span>
-                            <span @click="del(item.id,item.state)">删除</span>
-                        </li>
 
-                    </ul>
-
-                    <ul v-else-if="state==='done'">
-                        <li v-for="item in done" >
-                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
-
+                      <span> {{item.con}}</span>
+                      <span @click="del(item.id,item.state)" class="glyphicon glyphicon-trash removeList"></span>
+               </li>
+           </ul>
+           
+           <ul v-else-if="state==='done'">
+                <li v-for="item in done" >
+                   <span>{{item.time}}</span><br>
+                   <span @click="change(item.id,item.state)" :class="{green:item.state===2}" class="glyphicon glyphicon-ok-sign doneBtn">
                            </span>
                             <span> {{item.con}}</span>
-                            <span @click="del(item.id,item.state)">删除</span>
-                        </li>
-
-                    </ul>
-
-
-                    <ul v-else-if="state==='undo'">
-                        <li v-for="item in undo" >
-                           <span @click="change(item.id,item.state)" :class="{red:item.state===2}">
-
+                            <span @click="del(item.id,item.state)" class="glyphicon glyphicon-trash removeList"></span>
+                </li>
+            </ul>
+            
+           <ul v-else-if="state==='undo'">
+                <li v-for="item in undo" >
+                   <span>{{item.time}}</span><br>
+                   <span @click="change(item.id,item.state)" :class="{green:item.state===2}" class="glyphicon glyphicon-ok-sign doneBtn">
                            </span>
                             <span> {{item.con}}</span>
-                            <span @click="del(item.id,item.state)">删除</span>
-                        </li>
-
-                    </ul>
-                    <div class="opts">
-                        <button @click="changeState('all')">全部</button>
-                        <button @click="changeState('done')">完成</button>
-                        <button @click="changeState('undo')">未完成</button>
-                    </div>
-                </div>
-        </div>
-
-        <script>
+                            <span @click="del(item.id,item.state)" class="glyphicon glyphicon-trash removeList"></span>
+                </li>
+            </ul>
+		</div>
+	</div>
+	<script>
 
             new Vue({
-                el:".container",
+                el:".bigbox",
                 data:{
                     text:"",
                     arr:[],
@@ -111,11 +75,19 @@
                 },
                 methods:{
                     add(){
-
+                        var str="";
+				    	var date=new Date();
+				    	var year=date.getFullYear();
+				    	var month=date.getMonth()+1;
+				    	var day=date.getDate();
+				    	var hour=date.getHours();
+    	                var minutes=date.getMinutes()+1;
+				    	str=year+"-"+month+"-"+day+"——"+hour+":"+minutes;
                         var obj={
                             id:Math.random()+new Date().getTime(),
                             con:this.text,
-                            state:1
+                            state:1,
+                            time:str
                         }
                         this.text="";
                         this.arr.push(obj);
